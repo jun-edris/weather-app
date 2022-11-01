@@ -1,8 +1,11 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, lazy, Suspense } from 'react';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
-import CurrentWeather from './components/CurrentWeather';
+// import CurrentWeather from './components/CurrentWeather';
 import { convertToCelcius, convertToDate, convertToTime } from './utils';
 import CurrentData from './components/CurrentData';
+import Forecast from './components/Forecast';
+
+const CurrentWeather = lazy(() => import('./components/CurrentWeather'));
 
 type TCurrentWeather = {
 	name: string;
@@ -126,12 +129,12 @@ const App: React.FC = () => {
 	return (
 		<div className="h-full lg:h-screen text-white">
 			<div className="container mx-auto px-4 pb-10">
-				<header className="py-8 border-b border-gray-300 flex flex-col lg:flex-row justify-between items-center flex-wrap gap-y-4 lg:gap-y-0">
+				<header className="py-8 border-b border-gray-300 flex flex-col lg:flex-row justify-between items-center gap-y-4 lg:gap-y-0">
 					<span className="bg-white text-md px-2 py-2 inline-block w-[125px] font-bold text-black rounded-lg">
 						Cebu Province Weather App
 					</span>
 					<div>
-						<ul className="flex gap-x-5 flex-wrap gap-y-2 lg:gap-y-0">
+						<ul className="flex  gap-x-3 xl:gap-x-5 flex-wrap gap-y-2 justify-center lg:justify-end lg:gap-y-0">
 							{cityName.map((city, index) => (
 								<li key={index}>
 									<button
@@ -161,70 +164,73 @@ const App: React.FC = () => {
 						<div className="px-4 lg:px-20 mt-5 flex flex-col justify-between lg:flex-row gap-y-5 lg:gap-y-0 lg:gap-x-5">
 							<div className="lg:basis-2/6 px-1 py-8 bg-white/10 text-white rounded-lg">
 								{/* <span className=" font-semibold">Current</span> */}
-								{!fetching ? (
-									<>
-										<CurrentWeather
-											icon={currentWeather?.weather.icon}
-											desc={currentWeather?.weather.description}
-											temp={convertToCelcius(currentWeather?.temp)}
-											sunrise={currentWeather?.sunrise}
-											sunset={currentWeather?.sunset}
-											fetched={currentWeather ? true : false}
-										/>
-									</>
-								) : (
-									<div className="flex flex-col items-center">
-										<AiOutlineLoading3Quarters
-											size={40}
-											className="animate-spin"
-										/>
-									</div>
-								)}
+
+								<Suspense
+									fallback={
+										<div className="flex flex-col items-center">
+											<AiOutlineLoading3Quarters
+												size={40}
+												className="animate-spin"
+											/>
+										</div>
+									}
+								>
+									<CurrentWeather
+										icon={currentWeather?.weather.icon}
+										desc={currentWeather?.weather.description}
+										temp={convertToCelcius(currentWeather?.temp)}
+										sunrise={currentWeather?.sunrise}
+										sunset={currentWeather?.sunset}
+										fetched={currentWeather ? true : false}
+									/>
+								</Suspense>
 							</div>
 							<div className="lg:basis-4/6 flex flex-col justify-between">
 								<div className="py-5">
-									<CurrentData
-										fetching={fetching}
-										speed={currentWeather?.wind.speed}
-										deg={currentWeather?.wind.deg}
-										humidity={currentWeather?.humidity}
-									/>
+									<Suspense
+										fallback={
+											<div className="flex flex-col items-center">
+												<AiOutlineLoading3Quarters
+													size={40}
+													className="animate-spin"
+												/>
+											</div>
+										}
+									>
+										<CurrentData
+											fetching={fetching}
+											speed={currentWeather?.wind.speed}
+											deg={currentWeather?.wind.deg}
+											humidity={currentWeather?.humidity}
+										/>
+									</Suspense>
 								</div>
 								<div className="relative overflow-hidden pt-10 w-full h-full">
-									<h3 className="text-xl font-bold">5 Day Forecast</h3>
+									<h3 className="text-xl font-bold">3 Hour Forecast</h3>
 									<div className="relative overflow-x-scroll overflow-y-hidden min-h-[290px] w-full">
 										<div className="flex gap-x-5 mt-5 flex-nowrap absolute">
-											{!fetching ? (
-												<>
-													{forecast.map((cast, index) => (
-														<div
+											<Suspense
+												fallback={
+													<div className="flex justify-items-stretch items-stretch gap-x-5">
+														<div className="bg-white/10 animate-pulse rounded-lg py-12 h-full flex flex-1 flex-col justify-between items-center w-[160px]"></div>
+														<div className="bg-white/10 animate-pulse rounded-lg py-12 h-full flex flex-1 flex-col justify-between items-center w-[160px]"></div>
+													</div>
+												}
+											>
+												{forecast.map((cast, index) => (
+													<div
+														key={index}
+														className="bg-white/10 rounded-lg p-5 flex flex-1 flex-col justify-between items-center w-[160px]"
+													>
+														<Forecast
+															icon={cast?.weather[0].icon}
 															key={index}
-															className="bg-white/10 rounded-lg p-5 flex flex-1 flex-col justify-between items-center w-[160px]"
-														>
-															<span className="capitalize">
-																{cast?.weather[0].description}
-															</span>
-															<img
-																src={`http://openweathermap.org/img/wn/${cast?.weather[0].icon}@2x.png`}
-																width={90}
-																height={90}
-																alt={cast?.weather[0].description}
-															/>
-															<span className="capitalize">
-																{convertToDate(cast?.dt)}
-															</span>
-															<span className="capitalize">
-																{convertToTime(cast?.dt)}
-															</span>
-														</div>
-													))}
-												</>
-											) : (
-												<div className="flex justify-items-stretch items-stretch gap-x-5">
-													<div className="bg-white/10 animate-pulse rounded-lg py-12 h-full flex flex-1 flex-col justify-between items-center w-[160px]"></div>
-													<div className="bg-white/10 animate-pulse rounded-lg py-12 h-full flex flex-1 flex-col justify-between items-center w-[160px]"></div>
-												</div>
-											)}
+															desc={cast?.weather[0].description}
+															dt={cast?.dt}
+														/>
+													</div>
+												))}
+											</Suspense>
 										</div>
 									</div>
 								</div>

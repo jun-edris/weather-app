@@ -29,6 +29,7 @@ const CurrentWeather: React.FC<TCurrentWeather> = ({
 							width={150}
 							height={150}
 							alt={desc}
+							loading="lazy"
 						/>
 						<span className="text-2xl capitalize">{desc}</span>
 					</>
