@@ -117,11 +117,11 @@ const App: React.FC = () => {
 				.then((data3) => {
 					setForecast(data3.list.slice(0, 10));
 					setFetching(false);
-					return () => {
-						controller.abort();
-					};
 				})
-				.catch((err) => console.error(err));
+				.catch((err) => console.error(err))
+				.finally(() => {
+					controller.abort();
+				});
 		},
 		[api_key]
 	);
