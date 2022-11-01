@@ -64,6 +64,7 @@ const App: React.FC = () => {
 
 	const getCurrentWeather = useMemo(
 		() => async (cityName: string) => {
+			const controller = new AbortController();
 			await fetch(
 				`http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=${api_key}`,
 				{ method: 'GET' }
@@ -113,6 +114,9 @@ const App: React.FC = () => {
 				.then((data3) => {
 					setForecast(data3.list.slice(0, 10));
 					setFetching(false);
+					return () => {
+						controller.abort();
+					};
 				})
 				.catch((err) => console.error(err));
 		},
