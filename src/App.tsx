@@ -65,9 +65,10 @@ const App: React.FC = () => {
 		{ cityName: 'Toledo' },
 	];
 
-	const getCurrentWeather = useMemo(
-		() => async (cityName: string) => {
-			const controller = new AbortController();
+	const getCurrentWeather = async (cityName: string) => {
+		const controller = new AbortController();
+
+		try {
 			await fetch(
 				`http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=${api_key}`,
 				{ method: 'GET' }
@@ -122,9 +123,10 @@ const App: React.FC = () => {
 				.finally(() => {
 					controller.abort();
 				});
-		},
-		[api_key]
-	);
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	return (
 		<div className="h-full lg:h-screen text-white">
