@@ -147,7 +147,7 @@ const App: React.FC = () => {
               </div>
             </div>
             <div className="col-span-full md:col-span-3 xl:col-span-1 xl:row-span-3 shadow-lg shadow-green-200/25 rounded-3xl p-5 border border-slate-300 overflow-hidden h-[250px] xl:h-full">
-              <div className="w-full h-full bg-no-repeat bg-cover bg-center bg-[url('/public/cebu_map.png')] scale-[7]" />
+              <div className="w-full h-full bg-no-repeat bg-cover bg-center bg-[url('/public/cebu_map.webp')] scale-[7]" />
             </div>
             <div className="col-span-full md:col-span-2 xl:col-span-1 xl:row-span-2 shadow-lg shadow-green-200/25 rounded-3xl p-5 border border-slate-300 flex flex-col justify-between">
               <span>Wind</span>
