@@ -3,5 +3,28 @@
 @tailwind utilities;
 
 body {
-	background-color: rgb(49 46 129);
+  height: 100%;
+  box-sizing: border-box;
+  background-color: #e8e4c938;
+}
+
+*::after,
+*::before,
+* {
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  color: #2d2d2d;
+}
+
+span {
+  color: rgb(107, 107, 107);
 }
