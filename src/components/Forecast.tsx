@@ -1,5 +1,4 @@
-import React from "react";
-import { convertToDate, convertToTime } from "../utils";
+import { convertToTime } from "../utils";
 
 interface IForecast {
   icon: string;

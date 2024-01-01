@@ -1,11 +1,4 @@
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
-  ChartOptions,
-  ChartData,
-} from "chart.js";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import "chart.js/auto";
 import { Line } from "react-chartjs-2";
 import { weatherAPI } from "./api/weather";
